@@ -1,5 +1,7 @@
 @echo off
 cd /d "%~dp0"
+set PYTHON_CMD=python
+if exist ".venv\Scripts\python.exe" set PYTHON_CMD=.venv\Scripts\python.exe
 echo Running Wellfound Live Apply...
-.\.venv\Scripts\python main.py --apply --limit 10
+%PYTHON_CMD% main.py --apply --limit 10
 pause

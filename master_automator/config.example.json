@@ -1,0 +1,37 @@
+{
+  "settings": {
+    "log_dir": "logs",
+    "cooldown_seconds_between_tasks": 5,
+    "scheduler_time": "09:00",
+    "scheduler_task_name": "DailyMasterJobAutomation"
+  },
+  "projects": {
+    "naukri": {
+      "name": "Naukri Automation & Profile Booster",
+      "dir": "../naukri",
+      "python": "python",
+      "command": ["-u", "main.py", "--all"],
+      "stats_script": ["stats.py"],
+      "enabled": true,
+      "description": "Daily resume delete/re-upload bump & apply to up to 500 SDE & QA opportunities"
+    },
+    "instahyre": {
+      "name": "Instahyre Automation & Profile Booster",
+      "dir": "../instahyre",
+      "python": "python",
+      "command": ["-u", "main.py", "--all"],
+      "stats_script": ["stats.py"],
+      "enabled": true,
+      "description": "Resume bump, 1-click in-platform auto-apply & bulk modal recommendations"
+    },
+    "wellfound": {
+      "name": "Wellfound (AngelList) Job Automation",
+      "dir": "../wellfound",
+      "python": "python",
+      "command": ["-u", "main.py", "--apply", "--limit", "10"],
+      "stats_script": ["main.py", "--stats"],
+      "enabled": true,
+      "description": "Startup job search with Gemini AI tailored pitch notes & auto-submission"
+    }
+  }
+}

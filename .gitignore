@@ -10,13 +10,48 @@ __pycache__/
 *.so
 .pytest_cache/
 
-# User Sensitive Data & Session
+# Root local folders (standalone modules live inside platform subdirectories)
+/src/
+/config/
+
+# User Sensitive Data, Configs & Profiles (Across root & all subdirectories)
 .env
-config/config.yaml
-config/profile.yaml
+*.env
+**/.env
+config.yaml
+config.json
+profile.yaml
+**/config.yaml
+**/config.json
+**/profile.yaml
+!**/config.example.yaml
+!**/config.example.json
+!**/profile.example.yaml
+
+# Browser Profiles & Active Sessions (Across all platforms)
 browser_profile/
+browser_profile_*/
+**/browser_profile/
+**/browser_profile_*/
+
+# SQLite Databases & Dynamic Output Data
+*.db
+*.sqlite3
+**/*.db
+**/*.sqlite3
 data/*
-!data/.gitkeep
+**/data/*
+!**/data/.gitkeep
+
+# Master Automator Generated Files
+all_job_applications.csv
+**/all_job_applications.csv
+dashboard.html
+**/dashboard.html
+logs/
+**/logs/
+
+# Local backup / custom batch files
 run_master.bat
 _local_backup_preserve/
 

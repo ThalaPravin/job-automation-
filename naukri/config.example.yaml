@@ -1,0 +1,84 @@
+# Naukri Automation Multi-Profile Configuration (SDE & QA)
+# Copy this file to config.yaml and update with your preferences and resume paths.
+
+common:
+  min_delay_seconds: 3
+  max_delay_seconds: 6
+  freshness_days: 3
+  # Maximum daily direct in-platform applications per account (Naukri platform quota is 50)
+  max_direct_applies_per_day: 50
+  # Total daily opportunity target per profile (direct applies + external openings saved to CSV)
+  daily_total_target: 500
+
+filters:
+  blacklist_keywords:
+    - "placement fee"
+    - "training fee"
+    - "training charges"
+    - "pay upfront"
+    - "unpaid"
+    - "commission basis"
+    - "bpo"
+    - "telecaller"
+    - "telecalling"
+    - "data entry"
+    - "sales representative"
+    - "desktop support"
+
+profiles:
+  # ==========================================
+  # PROFILE 1: SDE / BACKEND DEVELOPER
+  # ==========================================
+  sde:
+    enabled: true
+    name: "Software Development Engineer (Backend / Full Stack)"
+    resume_path: "resumes/resume_sde.pdf"
+    user_data_dir: "browser_profile_sde"
+    db_path: "data/naukri_sde.db"
+    external_csv_path: "data/external_jobs_sde.csv"
+    auto_update_resume: true
+    touch_profile_fields: true
+    roles:
+      - "Java Developer"
+      - "Backend Developer"
+      - "Software Developer"
+      - "Full Stack Developer"
+      - "Software Engineer"
+      - "Python Developer"
+    experience_min: 0
+    experience_max: 3
+    screening_answers:
+      total_experience_years: "2.0"
+      relevant_experience: "2.0"
+      current_ctc_lpa: "6.0"
+      expected_ctc_lpa: "12.0"
+      notice_period_days: "30"
+      willing_to_relocate: "Yes"
+
+  # ==========================================
+  # PROFILE 2: QA / SDET / AUTOMATION TESTER
+  # ==========================================
+  qa:
+    enabled: true
+    name: "QA / SDET / Automation Tester"
+    resume_path: "resumes/resume_qa.pdf"
+    user_data_dir: "browser_profile_qa"
+    db_path: "data/naukri_qa.db"
+    external_csv_path: "data/external_jobs_qa.csv"
+    auto_update_resume: true
+    touch_profile_fields: true
+    roles:
+      - "QA Engineer"
+      - "Automation Test Engineer"
+      - "SDET"
+      - "Software Test Engineer"
+      - "QA Automation"
+    experience_min: 0
+    experience_max: 3
+    screening_answers:
+      total_experience_years: "2.0"
+      relevant_experience: "2.0"
+      current_ctc_lpa: "6.0"
+      expected_ctc_lpa: "12.0"
+      notice_period_days: "30"
+      willing_to_relocate: "Yes"

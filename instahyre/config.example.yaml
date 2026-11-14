@@ -1,0 +1,112 @@
+# Instahyre Job Automation Engine - Multi-Profile Configuration
+# Copy this file to config.yaml and configure your target roles, skills, and resume paths.
+
+common:
+  min_delay_seconds: 2
+  max_delay_seconds: 4
+  # Instahyre application targets per profile
+  max_direct_applies_per_day: 300
+  # Total daily opportunity target per profile (direct applies + external openings saved to CSV)
+  daily_total_target: 600
+
+filters:
+  blacklist_keywords:
+    - "placement fee"
+    - "training fee"
+    - "training charges"
+    - "pay upfront"
+    - "unpaid"
+    - "commission basis"
+    - "bpo"
+    - "telecaller"
+    - "telecalling"
+    - "data entry"
+    - "sales representative"
+    - "desktop support"
+
+profiles:
+  # ========================================================
+  # PROFILE 1: SDE / BACKEND / FULL STACK DEVELOPER
+  # ========================================================
+  sde:
+    enabled: true
+    name: "Software Development Engineer (Backend / Full Stack)"
+    resume_path: "resumes/resume_sde.pdf"
+    user_data_dir: "browser_profile_sde"
+    db_path: "data/instahyre_sde.db"
+    external_csv_path: "data/external_jobs_sde.csv"
+    auto_update_resume: true
+    touch_profile_fields: true
+    
+    # Target skills searched on Instahyre API / Search engine
+    skills:
+      - "Java"
+      - "Golang"
+      - "Backend"
+      - "Spring Boot"
+      - "Microservices"
+      - "Software Engineer"
+      
+    # Target job titles for strict validation and matching
+    roles:
+      - "Java Developer"
+      - "Golang Developer"
+      - "Backend Developer"
+      - "Software Development Engineer"
+      - "SDE"
+      - "Software Engineer"
+      
+    experience_min: 0
+    experience_max: 3
+    
+    # Screening questionnaire auto-answers
+    screening_answers:
+      total_experience_years: "2.0"
+      relevant_experience: "2.0"
+      current_ctc_lpa: "6.0"
+      expected_ctc_lpa: "12.0"
+      notice_period_days: "30"
+      willing_to_relocate: "Yes"
+
+  # ========================================================
+  # PROFILE 2: QA / SDET / AUTOMATION & MANUAL TESTER
+  # ========================================================
+  qa:
+    enabled: true
+    name: "QA / SDET / Automation & Manual Tester"
+    resume_path: "resumes/resume_qa.pdf"
+    user_data_dir: "browser_profile_qa"
+    db_path: "data/instahyre_qa.db"
+    external_csv_path: "data/external_jobs_qa.csv"
+    auto_update_resume: true
+    touch_profile_fields: true
+    
+    # Target skills searched on Instahyre API / Search engine
+    skills:
+      - "QA"
+      - "SDET"
+      - "Automation Testing"
+      - "Manual Testing"
+      - "Selenium"
+      - "Testing"
+      
+    # Target job titles for strict validation and matching
+    roles:
+      - "QA Engineer"
+      - "SDET"
+      - "Automation Tester"
+      - "Manual Tester"
+      - "Software Test Engineer"
+      - "QA Automation Engineer"
+      
+    experience_min: 0
+    experience_max: 3
+    
+    # Screening questionnaire auto-answers
+    screening_answers:
+      total_experience_years: "2.0"
+      relevant_experience: "2.0"
+      current_ctc_lpa: "6.0"
+      expected_ctc_lpa: "12.0"
+      notice_period_days: "30"
+      willing_to_relocate: "Yes"

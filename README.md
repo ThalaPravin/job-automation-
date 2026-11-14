@@ -1,60 +1,111 @@
-# 🤖 Wellfound (AngelList) Job Application Automation
+# 🚀 Unified Job Application Automation Suite
+### Automated Job Search, Resume Boosting, and Application Engine for Wellfound, Naukri & Instahyre
 
 [![Python Version](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
 [![Playwright](https://img.shields.io/badge/Playwright-Chromium-green.svg)](https://playwright.dev/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Multi-Platform](https://img.shields.io/badge/Platforms-Wellfound%20%7C%20Naukri%20%7C%20Instahyre-brightgreen.svg)](#-connected-platforms)
 
-An intelligent, safety-first job search and application automation bot for **Wellfound** (formerly AngelList Talent). Powered by **Playwright**, **Python**, and customizable **AI Pitch Generation** (Gemini / templating).
-
-Designed to automate repetitive job discovery and custom note submission while keeping your account completely secure with human-like browsing patterns, persistent sessions, and automated deduplication.
-
----
-
-## 🌟 Key Features
-
-- **🔐 Persistent Authentication**: Log in once manually in a real browser session; cookies, local storage, and session tokens are preserved locally in `browser_profile/`. No hardcoded credentials or repeated 2FA.
-- **🛡️ Stealth & Anti-Bot Evasion**: Runs real Chromium with stealth scripts to mask `navigator.webdriver` flags, simulating organic human interactions.
-- **⏱️ Humanized Randomized Pacing**: Configurable delays (default: 15–35 seconds) between applications prevent account rate-limiting or anti-bot flags.
-- **📝 High-Impact Pitch Generation**: Generates customized, high-converting pitch notes (under 1,000 characters) tailored to company and role requirements via Google Gemini or customizable markdown templates.
-- **🗄️ SQLite Deduplication**: Tracks every job application in a local SQLite database (`data/applications.db`). You will never accidentally apply to the same company or position twice.
-- **🧪 Safe Dry-Run Mode**: Inspect discovered jobs, preview generated pitch notes, and take debug screenshots without submitting live applications.
-- **📊 Real-Time Analytics**: Built-in CLI command to review total applications, recent companies, statuses, and timestamps.
+A battle-tested, modular automation suite engineered with **Playwright**, **Python**, and **AI Pitch Generation**. It unifies three major hiring platforms into one seamless command center—handling daily profile bumping, recruiter search optimization, 1-click auto-applies, tailored AI pitches, and cross-platform deduplication.
 
 ---
 
-## 📁 Project Structure
+## 📦 Connected Platforms
+
+| Platform | Folder | Core Automation Features | Daily Target | Target Market |
+| :--- | :--- | :--- | :--- | :--- |
+| **Wellfound** *(AngelList)* | [`wellfound/`](wellfound/) | AI tailored pitch generation (Gemini), anti-bot stealth Playwright, 1,000-char note limits, deduplication | 10–20 apps/day | US, Global Startups, Remote |
+| **Naukri.com** | [`naukri/`](naukri/) | Automated resume delete + re-upload (bumping profile to "Active in <24h"), dual-profile (SDE & QA), direct 1-click applies + external ATS link export | 50 direct / 500 total | India Tech, MNCs, High-Growth |
+| **Instahyre** | [`instahyre/`](instahyre/) | High-speed 1-click direct apply, automated questionnaire answering, bulk modal recommendations, dual-profile (SDE & QA) | Up to 300 direct / 600 total | Top Funded Startups, Unicorns |
+| **Master Automator** | [`master_automator/`](master_automator/) | Local Web Dashboard (`localhost:8888`), sequential multi-platform orchestrator, consolidated CSV export, Windows Task Scheduler | Daily Suite | Hands-Free Routine |
+
+---
+
+## 🌟 Key Architecture & Anti-Detection Features
+
+1. **Persistent Browser Sessions (`browser_profile/`)**:
+   - Log in **once** manually in a visible Chromium window. Cookies, local storage, and 2FA tokens are saved locally. No hardcoded passwords, tokens, or credential leaks.
+2. **Stealth & Bot Evasion**:
+   - Uses real Chromium user-agents, window maximization, and injected stealth scripts removing `navigator.webdriver` flags to pass Cloudflare Turnstile and anti-bot checks.
+3. **Resume Freshness Bump (Naukri & Instahyre)**:
+   - Recruiter search engines (e.g. Naukri Resdex) rank profiles by recent activity. The engine executes a strict delete-and-reupload sequence every morning so you appear under **"Active in < 24 Hours"**.
+4. **Tailored AI Pitch Generation (Wellfound)**:
+   - Generates high-converting startup pitch notes under 1,000 characters using Google Gemini or customizable markdown templates.
+5. **SQLite Deduplication & State Tracking**:
+   - Every platform tracks applied job keys in a local SQLite database (`data/*.db`). You will never apply to the same role twice.
+6. **Consolidated CSV Export**:
+   - Collects external application links (Workday, Greenhouse, Lever, Ashby) across all platforms into one master spreadsheet (`all_job_applications.csv`).
+
+---
+
+## 📁 Repository Structure
 
 ```text
 job-automation/
-├── config/
-│   ├── config.example.yaml     # Search filters, daily limits, pacing, and blacklist rules
-│   └── profile.example.yaml    # Candidate profile, skills, links, screening answers & pitch template
-├── src/
-│   ├── ai_pitcher.py           # Gemini AI and dynamic template pitch generator
-│   ├── applier.py              # Wellfound feed navigator, modal handler, and application engine
-│   ├── auth.py                 # Interactive & automated login detection
-│   ├── browser.py              # Playwright persistent context & stealth manager
-│   ├── config_loader.py        # Pydantic schemas and YAML configuration loader
-│   └── db.py                   # SQLite database manager for tracking & deduplication
-├── data/
-│   └── .gitkeep                # Applications database and screenshots directory (local-only)
-├── .env.example                # Optional Gemini API key configuration
-├── .gitignore                  # Strict rules to ignore credentials, profiles, and databases
-├── apply.bat                   # 1-click batch script for live application runs
-├── dry_run.bat                 # 1-click batch script for safe dry-run tests
-├── login.bat                   # 1-click batch script for initial browser login
-├── main.py                     # Main CLI entrypoint
-├── requirements.txt            # Python dependencies
-└── README.md                   # Project documentation
+├── wellfound/                  # Wellfound (AngelList) Automation Engine
+│   ├── config/                 # Profile & search config templates
+│   ├── src/                    # Applier, browser, auth, pitcher, and DB logic
+│   ├── main.py                 # Wellfound CLI runner
+│   ├── apply.bat               # 1-click live apply
+│   ├── dry_run.bat             # 1-click safe dry-run test
+│   ├── login.bat               # 1-click one-time session login
+│   └── README.md
+│
+├── naukri/                     # Naukri.com Multi-Profile Automation
+│   ├── config.example.yaml     # Roles, quotas, experience, and screening answers
+│   ├── browser_manager.py      # Playwright persistent context manager
+│   ├── job_engine.py           # Feed discovery & 1-click apply engine
+│   ├── profile_updater.py      # Resume delete/re-upload & profile touch flow
+│   ├── database.py             # SQLite deduplication
+│   ├── setup_session.py        # One-time interactive session login
+│   ├── main.py                 # Naukri CLI runner
+│   ├── run_all.bat             # Run both SDE & QA tracks
+│   └── README.md
+│
+├── instahyre/                  # Instahyre Multi-Profile Automation
+│   ├── config.example.yaml     # Skills, roles, and screening questionnaire answers
+│   ├── browser_manager.py      # Playwright persistent context manager
+│   ├── job_engine.py           # 1-click applicant & recommendation modal handler
+│   ├── profile_updater.py      # Profile freshness and resume upload engine
+│   ├── database.py             # SQLite deduplication
+│   ├── setup_session.py        # One-time interactive session login
+│   ├── generate_html_report.py # Visual HTML application report generator
+│   ├── main.py                 # Instahyre CLI runner
+│   ├── run_all.bat             # Run both SDE & QA tracks
+│   └── README.md
+│
+├── master_automator/           # Orchestrator & Web Control Center
+│   ├── config.example.json     # Multi-project relative path config
+│   ├── orchestrator.py         # Sequential execution engine with live log streaming
+│   ├── web_server.py           # Web UI server (http://localhost:8888)
+│   ├── master_cli.py           # Interactive rich terminal command center
+│   ├── stats_collector.py      # Consolidated multi-platform statistics
+│   ├── export_master_csv.py    # Master CSV exporter
+│   ├── LAUNCH_DASHBOARD.bat    # 1-click CLI dashboard launcher
+│   ├── LAUNCH_WEB_UI.bat       # 1-click web control center launcher
+│   ├── RUN_DAILY_ALL.bat       # 1-click full daily suite launcher
+│   └── README.md
+│
+├── main.py                     # Master CLI dispatcher for all 3 platforms
+├── RUN_ALL_DAILY.bat           # Root 1-click daily suite launcher
+├── LAUNCH_WEB_UI.bat           # Root 1-click web UI launcher
+├── LAUNCH_DASHBOARD.bat        # Root 1-click CLI menu launcher
+├── RUN_NAUKRI.bat              # Root 1-click Naukri launcher
+├── RUN_INSTAHYRE.bat           # Root 1-click Instahyre launcher
+├── apply.bat                   # Root 1-click Wellfound launcher
+├── requirements.txt            # Unified dependencies
+├── .gitignore                  # Comprehensive rules ignoring all private data
+├── LICENSE                     # MIT License
+└── README.md                   # Master documentation
 ```
 
 ---
 
-## 🚀 Quick Start & Installation
+## ⚡ Quick Start & Setup
 
 ### 1. Prerequisites
-- **Python 3.10+** installed on your system.
-- **Google Chrome** installed (optional, but recommended for native Chromium channel).
+- **Python 3.10+**
+- **Google Chrome** installed on your system.
 
 ### 2. Clone the Repository
 ```bash
@@ -62,159 +113,128 @@ git clone https://github.com/ThalaPravin/job-automation-.git
 cd job-automation-
 ```
 
-### 3. Set Up Virtual Environment
-On Windows (PowerShell / Command Prompt):
-```powershell
+### 3. Set Up Virtual Environment & Dependencies
+```bash
+# Windows
 python -m venv .venv
 .\.venv\Scripts\activate
-```
+pip install -r requirements.txt
+playwright install chromium
 
-On macOS / Linux:
-```bash
+# macOS / Linux
 python3 -m venv .venv
 source .venv/bin/activate
-```
-
-### 4. Install Dependencies
-```bash
 pip install -r requirements.txt
 playwright install chromium
 ```
 
 ---
 
-## ⚙️ Configuration
+## ⚙️ Platform Configuration
 
-Before running, configure your candidate profile and search preferences:
+Each platform contains a clean `.example.` configuration file. Simply copy and fill in your details:
 
-### Step 1: Candidate Profile (`config/profile.yaml`)
-Copy the example template:
+### 1. Wellfound Configuration
 ```bash
-# Windows
-copy config\profile.example.yaml config\profile.yaml
-
-# macOS / Linux
-cp config/profile.example.yaml config/profile.yaml
+copy wellfound\config\profile.example.yaml wellfound\config\profile.yaml
+copy wellfound\config\config.example.yaml wellfound\config\config.yaml
 ```
-Open `config/profile.yaml` in your text editor and fill in your details:
-- **`candidate`**: Full name, email, phone, location, GitHub, Portfolio, LinkedIn, primary tech stack, and summary.
-- **`pitch`**: Customize your master application pitch note template. You can use dynamic variables like `{company_name}`, `{role_title}`, `{candidate_name}`, `{skills}`, `{portfolio}`, `{github}`, `{linkedin}`.
-- **`screening_answers`**: Your standard answers for common startup screening questions (work authorization, notice period, salary expectations).
+- In `wellfound/config/profile.yaml`: Fill in your candidate details, primary skills, portfolio/GitHub links, and master pitch note template.
+- Optional: Add your Google Gemini API key to `.env` if you want AI-generated notes.
 
-### Step 2: Search & Safety Filters (`config/config.yaml`)
-Copy the configuration template:
+### 2. Naukri Configuration
 ```bash
-# Windows
-copy config\config.example.yaml config\config.yaml
-
-# macOS / Linux
-cp config/config.example.yaml config/config.yaml
+copy naukri\config.example.yaml naukri\config.yaml
 ```
-Key settings to customize:
-- **`custom_search_url`**: *(Recommended)* Go to [wellfound.com/jobs](https://wellfound.com/jobs) in your browser, apply your target filters (Roles, Remote, Salary, Tech Stack), and paste the full resulting URL into `custom_search_url`.
-- **`max_applications_per_run`**: Maximum number of applications per batch (recommended: 10–15).
-- **`min_delay_seconds` & `max_delay_seconds`**: Randomized human delay between applications (default: 15–35 seconds).
-- **`blacklist`**: Companies or title keywords (e.g., `Intern`, `Staff`, `VP`, `Unpaid`) to automatically skip.
+- In `naukri/config.yaml`: Set the paths to your PDF resumes for SDE and QA tracks, and configure your salary/notice period answers.
 
-### Step 3: (Optional) AI Pitch Generation with Gemini
-If you want Google Gemini to write hyper-tailored pitch notes for each job description:
-1. Copy `.env.example` to `.env`:
-   ```bash
-   copy .env.example .env
-   ```
-2. Add your Gemini API key:
-   ```env
-   GEMINI_API_KEY=your_gemini_api_key_here
-   ```
-3. In `config/profile.yaml`, set `pitch.use_ai: true`.
+### 3. Instahyre Configuration
+```bash
+copy instahyre\config.example.yaml instahyre\config.yaml
+```
+- In `instahyre/config.yaml`: Set target skills, target roles, experience range, and questionnaire answers.
 
-*(Note: If `use_ai` is `false` or no API key is set, the bot uses your customized pitch template from `config/profile.yaml`)*.
+### 4. Master Automator Configuration
+```bash
+copy master_automator\config.example.json master_automator\config.json
+```
 
 ---
 
-## 🎮 How to Use
+## 🚦 How to Run
 
-### 1. One-Time Login (Save Session)
-Run the login command to launch the browser:
-```bash
-# Using CLI
-python main.py --login
-
-# Or on Windows, double-click:
-login.bat
-```
-- A visible browser window will open to Wellfound.
-- Sign in with Google, LinkedIn, or Email + Password.
-- Once you are logged in and see the Wellfound dashboard, press `ENTER` in your terminal.
-- Your session is saved locally in `browser_profile/` for all future automated runs.
+### Option 1: 1-Click Launchers (Windows)
+Double-click any of the batch files in the root folder:
+- **`RUN_ALL_DAILY.bat`**: Runs the entire multi-platform daily automation sequentially.
+- **`LAUNCH_WEB_UI.bat`**: Opens the Web Control Center at `http://localhost:8888`.
+- **`LAUNCH_DASHBOARD.bat`**: Opens the interactive terminal dashboard menu.
+- **`apply.bat`**: Runs Wellfound Live Apply.
+- **`RUN_NAUKRI.bat`**: Runs Naukri SDE & QA automation.
+- **`RUN_INSTAHYRE.bat`**: Runs Instahyre SDE & QA automation.
 
 ---
 
-### 2. Run in Dry-Run Mode (Safe Test)
-Test job scanning, modal opening, and pitch generation without submitting:
+### Option 2: Unified Command-Line Interface (CLI)
+From the repository root:
 ```bash
-# Test 3 applications in dry-run mode
-python main.py --dry-run --limit 3
+# Run the complete daily suite (all 3 platforms)
+python main.py --all
 
-# Or on Windows:
-dry_run.bat
+# Launch the Web Dashboard
+python main.py --dashboard
+
+# Run Wellfound automation
+python main.py --wellfound --apply --limit 10
+python main.py --wellfound --stats
+
+# Run Naukri automation
+python main.py --naukri --all
+python main.py --naukri --profile sde
+
+# Run Instahyre automation
+python main.py --instahyre --all
+python main.py --instahyre --profile sde
 ```
-- The bot will navigate to your search feed, extract matching job cards, fill in the pitch note, take a screenshot to `data/screenshots/`, and close the modal without clicking Submit.
 
 ---
 
-### 3. Live Apply
-When you are satisfied with your pitch notes and configuration:
+### Option 3: Modern Web Control Center (`http://localhost:8888`)
+Launch the web server:
 ```bash
-# Live apply to 10 matching jobs
-python main.py --apply --limit 10
-
-# Or on Windows:
-apply.bat
+python main.py --dashboard
+# (or double-click LAUNCH_WEB_UI.bat)
 ```
-The bot will:
-1. Verify existing session.
-2. Scan the jobs feed according to your `custom_search_url`.
-3. Check company and title against your blacklist.
-4. Verify whether you have previously applied via the local SQLite database.
-5. Fill the customized pitch note.
-6. Click Submit.
-7. Record the application timestamp in `data/applications.db`.
-8. Wait for a randomized human delay (15–35s) before processing the next role.
+Open **`http://localhost:8888`** in your browser:
+- Real-time metric cards (Daily applications, lifetime total, external leads).
+- One-click **"⚡ Run Full Daily Suite"** button.
+- Platform-specific triggers (Wellfound, Naukri SDE/QA, Instahyre SDE/QA).
+- Live terminal execution console.
 
 ---
 
-### 4. View Application Statistics & History
-To see how many jobs you have applied to and view recent submissions:
-```bash
-python main.py --stats
-```
+## ⏰ Automated Hands-Free Routine (Windows Task Scheduler)
 
-Example output:
-```text
-=== Application Statistics ===
-┌─────────┬───────┐
-│ Status  │ Count │
-├─────────┼───────┤
-│ TOTAL   │    23 │
-│ APPLIED │    22 │
-│ DRY_RUN │     1 │
-│ SKIPPED │     0 │
-│ FAILED  │     0 │
-└─────────┴───────┘
+To run the complete job application suite automatically every morning at **9:00 AM** without touching your computer:
+
+Open **PowerShell as Administrator** and run:
+```powershell
+$Action = New-ScheduledTaskAction -Execute "$PWD\RUN_ALL_DAILY.bat"
+$Trigger = New-ScheduledTaskTrigger -Daily -At 9:00AM
+Register-ScheduledTask -Action $Action -Trigger $Trigger -TaskName "DailyMasterJobAutomation" -Description "Automated daily resume boost and multi-platform job application suite"
 ```
 
 ---
 
 ## 🔒 Security & Privacy Notice
 
-- **Never Commit Secrets**: `config/profile.yaml`, `config/config.yaml`, `.env`, `browser_profile/`, and `data/*.db` are strictly ignored by `.gitignore`. Keep your personal profile and session tokens on your local machine.
-- **Account Safety Guidelines**:
-  - Do not exceed 20–30 applications per 24-hour window to avoid triggering Wellfound rate limits.
-  - Always keep `headless: false` in `config/config.yaml` so Cloudflare anti-bot challenges can render naturally without getting flagged.
+- **No Credentials in Code**: All personal profiles (`profile.yaml`), configurations (`config.yaml`, `config.json`), API keys (`.env`), and session directories (`browser_profile*`) are strictly ignored by `.gitignore`.
+- **Safe Quotas**: Respect platform limits to keep your accounts in good standing:
+  - Wellfound: 10–20 applications daily.
+  - Naukri: 50 direct applications daily (Naukri platform maximum).
+  - Instahyre: 200–300 applications daily.
 
 ---
 
 ## 📄 License
 
-This project is licensed under the [MIT License](LICENSE).
+This project is open-source and available under the [MIT License](LICENSE).

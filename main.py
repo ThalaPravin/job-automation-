@@ -1,8 +1,12 @@
+"""
+Unified Job Automation Suite - Master Entrypoint
+Supported Platforms: Wellfound, Naukri, Instahyre
+"""
+
 import argparse
-import asyncio
+import os
+import subprocess
 import sys
-from rich.console import Console
-from rich.table import Table
 
 if sys.platform == "win32":
     try:
@@ -11,91 +15,68 @@ if sys.platform == "win32":
     except Exception:
         pass
 
-from src.config_loader import get_config, get_profile
-from src.db import Database
-from src.browser import BrowserManager
-from src.auth import ensure_authenticated
-from src.applier import WellfoundApplier
-
-console = Console()
-
-def show_stats(db: Database):
-    stats = db.get_stats()
-    console.print("\n[bold cyan]=== Application Statistics ===[/bold cyan]")
-    table = Table(title="Summary")
-    table.add_column("Status", style="bold")
-    table.add_column("Count", justify="right")
-    for status, count in stats.items():
-        table.add_row(status.upper(), str(count))
-    console.print(table)
-
-    recent = db.get_all_applications(limit=15)
-    if recent:
-        console.print("\n[bold cyan]Recent Applications:[/bold cyan]")
-        rec_table = Table()
-        rec_table.add_column("Company", style="cyan")
-        rec_table.add_column("Title", style="green")
-        rec_table.add_column("Status", style="yellow")
-        rec_table.add_column("Applied At", style="dim")
-        for item in recent:
-            rec_table.add_row(item["company_name"], item["job_title"], item["status"], str(item["applied_at"]))
-        console.print(rec_table)
-
-async def run_automation(dry_run: bool, limit: int, login_only: bool = False):
-    config = get_config()
-    profile = get_profile()
-    db = Database()
-
-    # Override dry-run if flag explicitly specified
-    if dry_run is not None:
-        config.safety.dry_run = dry_run
-
-    console.print(f"[bold cyan]Starting Wellfound Bot... (Mode: {'DRY RUN' if config.safety.dry_run else 'LIVE APPLY'})[/bold cyan]")
-    console.print(f"Candidate: [green]{profile.candidate.full_name}[/green] ({profile.candidate.email})")
-
-    browser_mgr = BrowserManager(config.browser, headless=config.safety.headless)
-    page = await browser_mgr.start()
-
-    try:
-        authenticated = await ensure_authenticated(page)
-        if not authenticated:
-            console.print("[red]Could not verify authentication. Exiting.[/red]")
-            return
-
-        if login_only:
-            console.print("[bold green]Login completed and session profile saved! You can now run --dry-run or --apply.[/bold green]")
-            return
-
-        applier = WellfoundApplier(page, config, profile, db)
-        await applier.run(max_applications=limit)
-
-    finally:
-        console.print("[cyan]Closing browser session...[/cyan]")
-        await browser_mgr.close()
-
 def main():
-    parser = argparse.ArgumentParser(description="Wellfound Job Application Automation Bot")
-    parser.add_argument("--login", action="store_true", help="Launch browser to manually log into Wellfound and save cookies/session")
-    parser.add_argument("--dry-run", action="store_true", help="Run without submitting applications (generates notes, takes screenshots)")
-    parser.add_argument("--apply", action="store_true", help="Live apply to matching jobs")
-    parser.add_argument("--limit", type=int, default=None, help="Maximum number of applications for this run")
-    parser.add_argument("--stats", action="store_true", help="Show application history and statistics")
+    parser = argparse.ArgumentParser(
+        description="Unified Job Application Automation Suite (Wellfound, Naukri, Instahyre)",
+        add_help=False
+    )
+    parser.add_argument("--platform", choices=["wellfound", "naukri", "instahyre", "all"], default=None, help="Target platform to run")
+    parser.add_argument("--wellfound", action="store_true", help="Run Wellfound automation")
+    parser.add_argument("--naukri", action="store_true", help="Run Naukri automation")
+    parser.add_argument("--instahyre", action="store_true", help="Run Instahyre automation")
+    parser.add_argument("--all", action="store_true", help="Run all 3 platforms sequentially")
+    parser.add_argument("--dashboard", action="store_true", help="Launch Master Web Dashboard (localhost:8888)")
+    parser.add_argument("-h", "--help", action="store_true", help="Show help message")
 
-    args = parser.parse_args()
-    db = Database()
+    args, remaining = parser.parse_known_args()
 
-    if args.stats:
-        show_stats(db)
+    py_cmd = sys.executable
+    root_dir = os.path.dirname(os.path.abspath(__file__))
+
+    if args.help:
+        parser.print_help()
+        print("\n--- Platform Specific Options ---")
+        print("  Wellfound : python main.py --wellfound [--apply | --dry-run | --login | --stats] [--limit N]")
+        print("  Naukri    : python main.py --naukri [--profile sde|qa | --all]")
+        print("  Instahyre : python main.py --instahyre [--profile sde|qa | --all]")
+        print("  Master UI : python main.py --dashboard")
+        print("  Run All   : python main.py --all")
         return
 
-    # Determine mode
-    dry_run = True
-    if args.apply:
-        dry_run = False
-    elif args.dry_run:
-        dry_run = True
+    # 1. Master Web Dashboard
+    if args.dashboard:
+        target_dir = os.path.join(root_dir, "master_automator")
+        subprocess.run([py_cmd, "web_server.py"], cwd=target_dir)
+        return
 
-    asyncio.run(run_automation(dry_run=dry_run, limit=args.limit, login_only=args.login))
+    # 2. Run All Platforms
+    if args.all:
+        target_dir = os.path.join(root_dir, "master_automator")
+        subprocess.run([py_cmd, "master_cli.py", "--daily"], cwd=target_dir)
+        return
+
+    # 3. Naukri Platform
+    if args.naukri or args.platform == "naukri":
+        target_dir = os.path.join(root_dir, "naukri")
+        cmd = [py_cmd, "main.py"] + [a for a in sys.argv[1:] if a not in ["--naukri", "--platform", "naukri"]]
+        if not any(c in cmd for c in ["--profile", "--all", "-h", "--help"]):
+            cmd.append("--all")
+        subprocess.run(cmd, cwd=target_dir)
+        return
+
+    # 4. Instahyre Platform
+    if args.instahyre or args.platform == "instahyre":
+        target_dir = os.path.join(root_dir, "instahyre")
+        cmd = [py_cmd, "main.py"] + [a for a in sys.argv[1:] if a not in ["--instahyre", "--platform", "instahyre"]]
+        if not any(c in cmd for c in ["--profile", "--all", "-h", "--help"]):
+            cmd.append("--all")
+        subprocess.run(cmd, cwd=target_dir)
+        return
+
+    # 5. Default / Wellfound Platform
+    target_dir = os.path.join(root_dir, "wellfound")
+    cmd = [py_cmd, "main.py"] + [a for a in sys.argv[1:] if a not in ["--wellfound", "--platform", "wellfound"]]
+    subprocess.run(cmd, cwd=target_dir)
 
 if __name__ == "__main__":
     main()
