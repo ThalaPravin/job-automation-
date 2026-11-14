@@ -1,0 +1,48 @@
+# Candidate Profile Information & Application Details
+# Fill in your details below and rename/copy this file to config/profile.yaml
+
+candidate:
+  full_name: "Alex Doe"
+  email: "alex.doe@example.com"
+  phone: "+1 (555) 012-3456"
+  location: "San Francisco, CA"
+  linkedin: "https://www.linkedin.com/in/alexdoe/"
+  github: "https://github.com/alexdoe"
+  portfolio: "https://alexdoe.dev"
+  leetcode: "https://leetcode.com/u/alexdoe/"
+  current_company: "Tech Corp"
+  education: "B.S. in Computer Science (GPA: 3.8 / 4.0)"
+  years_of_experience: 2
+  primary_skills: "Go, Python, Microservices, REST APIs, gRPC, PostgreSQL, Redis, Kafka, Docker, Kubernetes, AWS, System Design"
+  summary: "Backend Software Engineer experienced in building scalable, distributed microservices, low-latency APIs, and cloud-native architectures."
+
+pitch:
+  use_ai: false
+
+  # Master pitch note template (interpolates placeholders automatically)
+  template: |
+    Hi {company_name} team,
+
+    I'm {candidate_name}, a {role_title} specializing in {skills}.
+
+    I have extensive experience building scalable, distributed backend systems and high-throughput microservices. I take end-to-end ownership of services from design to production monitoring.
+
+    I thrive in high-ownership engineering environments where I can build reliable, low-latency systems and deliver impact from day one.
+
+    • Portfolio: {portfolio}
+    • GitHub: {github}
+    • LinkedIn: {linkedin}
+
+    Looking forward to connecting!
+    Best regards,
+    {candidate_name}
+
+screening_answers:
+  require_visa_sponsorship: "No"
+  authorized_to_work: "Yes"
+  notice_period: "30 days"
+  available_start_date: "Immediately / 30 days"
+  expected_salary_usd: "60,000 - 90,000"
+  expected_salary_inr: "20 - 30 LPA"
+  remote_only: "Flexible (Remote or Hybrid)"
+  willing_to_relocate: "Yes"

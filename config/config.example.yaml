@@ -1,0 +1,58 @@
+# Wellfound Application Automation Configuration
+
+search:
+  # If provided, this exact Wellfound URL will be opened directly.
+  # TIP: Go to wellfound.com/jobs in your browser, apply your desired filters
+  # (roles, remote, salary, tech stack), and paste the resulting URL here:
+  custom_search_url: "https://wellfound.com/jobs"
+
+  # Search keywords / roles if not using a pre-filtered custom_search_url
+  roles:
+    - "Full Stack Engineer"
+    - "Software Engineer"
+    - "Backend Engineer"
+
+  # Locations to filter (e.g. Remote, India, United States)
+  locations:
+    - "Remote"
+
+  # Minimum compensation in USD (0 = any)
+  min_salary_usd: 0
+
+safety:
+  # Dry run mode: fills the application and generates the pitch, but DOES NOT click Submit
+  # Highly recommended to keep true until you verify the notes and answers!
+  dry_run: true
+
+  # Max applications to submit in a single execution (recommended: 10 - 20)
+  max_applications_per_run: 10
+
+  # Humanized randomized delay (in seconds) between applications to avoid bot detection
+  min_delay_seconds: 15
+  max_delay_seconds: 35
+
+  # Always keep headless false for Wellfound to avoid Cloudflare bot blocking
+  headless: false
+
+browser:
+  # Persistent profile directory to keep login session active
+  user_data_dir: "browser_profile"
+
+  # Optional: Connect to an existing running Chrome instance (if running with --remote-debugging-port=9222)
+  use_cdp: false
+  cdp_url: "http://localhost:9222"
+
+blacklist:
+  # Companies to skip automatically
+  companies:
+    - "ExampleCompanyToSkip"
+
+  # Keywords in job title to skip
+  title_keywords_exclude:
+    - "Director"
+    - "VP"
+    - "Vice President"
+    - "Staff"
+    - "Principal"
+    - "Intern"
+    - "Unpaid"

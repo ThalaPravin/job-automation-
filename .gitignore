@@ -1,0 +1,27 @@
+# Virtual Environment
+.venv/
+venv/
+ENV/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+
+# User Sensitive Data & Session
+.env
+config/config.yaml
+config/profile.yaml
+browser_profile/
+data/*
+!data/.gitkeep
+run_master.bat
+_local_backup_preserve/
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
